@@ -21,7 +21,7 @@
   background-color: #fff; 
   cursor: pointer;
   transition: background-color 0.2s;
-  border-bottom: 3.5px solid #0000000a;
+  border-bottom: 2px solid var(--gris);
 }
 
 .user-section:hover {
@@ -86,7 +86,7 @@
 }
 
 .nav-links li.active {
-  border-bottom: 3.5px solid var(--azul); 
+  border-bottom: 2px solid var(--azul); 
 }
 
 .nav-links a {
@@ -123,7 +123,7 @@
 }
 
 .sidebar-bottom {
-  border-top: 1px solid #eee;
+  border-top: 2px solid var(--gris);
   padding-top: 15px;
 }
 
