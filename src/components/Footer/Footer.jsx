@@ -6,9 +6,9 @@ const Footer = () => {
     <footer>
         <p>&copy; 2025 EduLend. Todos los derechos reservados.</p>
         <p>
-            <a href="https://www.edulend.com/terminos">Términos</a> |
-            <a href="https://www.edulend.com/privacidad">Privacidad</a> |
-            <a href="https://www.edulend.com/contacto">Contacto</a>
+            <a href="#">Términos</a> |
+            <a href="#">Privacidad</a> |
+            <a href="#">Contacto</a>
         </p>
     </footer>
   );
