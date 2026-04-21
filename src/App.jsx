@@ -8,6 +8,7 @@ import Profile from './pages/Profile/Profile';
 import Inventory from './pages/Inventory/Inventory';
 import Loans from './pages/Loans/Loans';
 import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Register/RegisterPage';
 import './App.css';
 
 function App() {
@@ -15,8 +16,9 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public Route */}
+          {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
           <Route

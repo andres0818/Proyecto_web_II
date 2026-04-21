@@ -1,0 +1,122 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+  padding: 20px;
+}
+
+.register-box {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.register-form h2 {
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.register-form .input-group {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.register-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: #3182ce;
+}
+
+.register-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 1rem;
+}
+
+.register-button:hover {
+  background-color: #2b6cb0;
+}
+
+.register-button:active {
+  transform: scale(0.98);
+}
+
+.login-link {
+  margin-top: 1.5rem;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.login-link a {
+  color: #3182ce;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.error-message {
+  background-color: #fff5f5;
+  color: #c53030;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #feb2b2;
+}
+
+/* Barra de fuerza */
+.strength-bar {
+  height: 6px;
+  background-color: #edf2f7;
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bar.level-0 { width: 5%; background-color: #e53e3e; }
+.bar.level-1 { width: 33%; background-color: #f56565; }
+.bar.level-2 { width: 66%; background-color: #ecc94b; }
+.bar.level-3 { width: 100%; background-color: #48bb78; }
+
+.strength-text {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  color: #718096;
+}

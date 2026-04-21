@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Yeti from './Yeti';
 import './LoginPage.css';
@@ -102,6 +102,9 @@ const LoginPage = () => {
             />
           </div>
           <button type="submit" className="login-button">Login</button>
+          <p className="register-link">
+            Don't have an account? <Link to="/register">Register here</Link>
+          </p>
         </form>
       </div>
     </div>

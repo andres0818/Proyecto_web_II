@@ -1,0 +1,66 @@
+.evolving-yeti-container {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.yeti-body {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+/* Grupos de brazos y manos */
+.yeti-arm-group {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.yeti-arm-group.left {
+  transform-origin: 45px 180px;
+}
+
+.yeti-arm-group.right {
+  transform-origin: 155px 180px;
+}
+
+/* Movimiento hacia los ojos */
+.hands-up .yeti-arm-group.left {
+  transform: translate(35px, -55px) rotate(15deg);
+}
+
+.hands-up .yeti-arm-group.right {
+  transform: translate(-35px, -55px) rotate(-15deg);
+}
+
+/* Ojos cerrados cuando las manos suben */
+.eyes-group {
+  transition: opacity 0.2s ease;
+}
+.yeti-hat, .yeti-sunglasses, .yeti-cape {
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* El Yeti crece un poco cuando es nivel 3 */
+.level-3 .yeti-body {
+  transform: scale(1.1);
+}
+
+.yeti-cape {
+  transform-origin: center top;
+}
+
+/* Animación de respiración compartida */
+@keyframes yeti-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.yeti-body {
+  animation: yeti-breathe 3s infinite ease-in-out;
+}
