@@ -1,0 +1,60 @@
+.yeti-container {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.yeti-body {
+  width: 100%;
+  height: 100%;
+}
+
+.yeti-arm-group {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.yeti-arm-group.left {
+  transform-origin: 45px 180px;
+}
+
+.yeti-arm-group.right {
+  transform-origin: 155px 180px;
+}
+
+.hands-up .yeti-arm-group.left {
+  transform: translate(35px, -55px) rotate(15deg);
+}
+
+.hands-up .yeti-arm-group.right {
+  transform: translate(-35px, -55px) rotate(-15deg);
+}
+
+.eyes-group {
+  transition: opacity 0.2s ease;
+}
+
+.hands-up .eyes-group {
+  opacity: 0.5;
+}
+
+.yeti-mouth {
+  transition: d 0.3s ease;
+}
+
+.success .yeti-mouth {
+  stroke: #48bb78;
+}
+
+.error .yeti-mouth {
+  stroke: #f56565;
+}
+
+@keyframes yeti-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.yeti-body {
+  animation: yeti-breathe 3s infinite ease-in-out;
+}

@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiChevronLeft, FiChevronRight, FiLayout, FiLogOut, FiBox, FiClipboard } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ isCollapsed, toggleSidebar }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState('dashboard');
-  const userName = "Andrés Pérez";
+  const userName = user?.username || "Guest";
 
   const handleItemClick = (item) => {
     setActiveItem(item);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -51,7 +59,7 @@ const Navbar = ({ isCollapsed, toggleSidebar }) => {
         </ul>
 
         <div className="sidebar-bottom">
-          <button className="logout-btn" title="Logout">
+          <button className="logout-btn" onClick={handleLogout} title="Logout">
             <FiLogOut size={20} className="nav-icon" />
             {!isCollapsed && <span>Logout</span>}
           </button>
