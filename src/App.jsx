@@ -15,7 +15,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/Proyecto_web_II">
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
