@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUser, FiChevronLeft, FiChevronRight, FiLayout, FiLogOut, FiBox, FiClipboard } from 'react-icons/fi';
+import { FiUser, FiChevronLeft, FiChevronRight, FiLayout, FiLogOut, FiBox, FiClipboard, FiPieChart } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ isCollapsed, toggleSidebar }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeItem, setActiveItem] = useState('dashboard');
+  const [activeItem, setActiveItem] = useState('home');
   const userName = user?.first_name ? `${user.first_name} ${user.last_name || ''}` : user?.email || "Guest";
 
   const handleItemClick = (item) => {
@@ -38,10 +38,16 @@ const Navbar = ({ isCollapsed, toggleSidebar }) => {
 
       <div className="sidebar-content">
         <ul className="nav-links">
-          <li className={activeItem === 'dashboard' ? 'active' : ''} onClick={() => handleItemClick('dashboard')}>
-            <Link to="/" title="Dashboard">
+          <li className={activeItem === 'home' ? 'active' : ''} onClick={() => handleItemClick('home')}>
+            <Link to="/" title="Home">
               <FiLayout size={20} className="nav-icon" />
-              {!isCollapsed && <span>Dashboard</span>}
+              {!isCollapsed && <span>Home</span>}
+            </Link>
+          </li>
+          <li className={activeItem === 'analytics' ? 'active' : ''} onClick={() => handleItemClick('analytics')}>
+            <Link to="/dashboard" title="Analytics">
+              <FiPieChart size={20} className="nav-icon" />
+              {!isCollapsed && <span>Analytics</span>}
             </Link>
           </li>
           <li className={activeItem === 'inventory' ? 'active' : ''} onClick={() => handleItemClick('inventory')}>
