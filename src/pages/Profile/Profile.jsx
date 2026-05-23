@@ -1,64 +1,129 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import UserService from "../../services/userService";
 import "./Profile.css";
 
 const Profile = () => {
 
+  const { user, login } = useAuth();
   const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    direccion: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
     email: "",
     password_actual: "",
     password_new: "",
     password_confirmar: ""
   });
+  const [msg, setMsg] = useState("");
+  const [passMsg, setPassMsg] = useState("");
+  
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        phone_number: user.phone_number || "",
+        email: user.email || ""
+      }));
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData({
       ...formData,
       [name]: value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleUpdateInfo = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      // Create user DTO matching backend expectation
+      // Note: Backend might require password when updating, so we might need a separate endpoint for password change
+      // For now, we update basic info sending the existing role and a dummy password if it's required by the DTO,
+      // or hopefully the backend allows partial updates. Let's assume it requires full DTO.
+      await UserService.update(user.userId, {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        phone_number: formData.phone_number,
+        user_role: user.user_role
+      });
+      setMsg("Información actualizada correctamente. (Inicia sesión de nuevo para ver los cambios globales si es necesario)");
+    } catch (err) {
+      console.error(err);
+      setMsg("Error al actualizar la información.");
+    }
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPassMsg("");
+    
+    if (formData.password_new !== formData.password_confirmar) {
+      setPassMsg("Las nuevas contraseñas no coinciden.");
+      return;
+    }
+    
+    try {
+      const payload = {
+        currentPassword: formData.password_actual,
+        newPassword: formData.password_new,
+        confirmPassword: formData.password_confirmar
+      };
+      
+      await UserService.changePassword(user.userId, payload);
+      setPassMsg("¡Contraseña actualizada con éxito!");
+      
+      // Limpiar los campos de contraseña
+      setFormData(prev => ({
+        ...prev,
+        password_actual: "",
+        password_new: "",
+        password_confirmar: ""
+      }));
+    } catch (err) {
+      console.error("Error al cambiar contraseña:", err);
+      setPassMsg(err.response?.data || "Error al cambiar la contraseña. Verifica tu contraseña actual.");
+    }
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      {msg && <div style={{ marginBottom: "1rem", color: "blue" }}>{msg}</div>}
+      <form onSubmit={handleUpdateInfo}>
         <fieldset>
-          <legend>Informacion personal</legend>
+          <legend>Información personal</legend>
 
           <label>
-            Nombre:
+            Nombre(s):
             <input
               type="text"
-              name="nombre"
-              value={formData.nombre}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
             />
           </label>
 
           <label>
-            Apellido:
+            Apellidos:
             <input
               type="text"
-              name="apellido"
-              value={formData.apellido}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
             />
           </label>
 
           <label>
-            Dirección:
+            Teléfono:
             <input
               type="text"
-              name="direccion"
-              value={formData.direccion}
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleChange}
             />
           </label>
@@ -73,11 +138,13 @@ const Profile = () => {
             />
           </label>
         </fieldset>
+        <button type="submit" style={{ marginTop: "1rem" }}>Actualizar Información</button>
       </form>
 
       <h3>¿Cambiar contraseña?</h3>
+      {passMsg && <div style={{ marginBottom: "1rem", color: passMsg.includes("Error") || passMsg.includes("no coinciden") ? "red" : "green" }}>{passMsg}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handlePasswordChange}>
         <fieldset>
 
           <label htmlFor="password_actual">
@@ -118,7 +185,7 @@ const Profile = () => {
 
         </fieldset>
 
-        <button type="submit">Guardar cambios</button>
+        <button type="submit" style={{ marginTop: "1rem" }}>Cambiar Contraseña</button>
       </form>
     </>
   );

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import AuthService from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -8,14 +9,18 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const login = (username, password) => {
-    if (username === 'admin' && password === 'admin') {
-      const newUser = { username };
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return true;
+  const login = async (email, password) => {
+    try {
+      const userData = await AuthService.login(email, password);
+      // userData should be the UserDTO returned by the backend
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return { success: true };
+    } catch (error) {
+      console.error('Login failed:', error);
+      const message = error.response?.data || 'Invalid email or password';
+      return { success: false, message };
     }
-    return false;
   };
 
   const logout = () => {

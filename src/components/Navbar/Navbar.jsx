@@ -8,7 +8,7 @@ const Navbar = ({ isCollapsed, toggleSidebar }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState('dashboard');
-  const userName = user?.username || "Guest";
+  const userName = user?.first_name ? `${user.first_name} ${user.last_name || ''}` : user?.email || "Guest";
 
   const handleItemClick = (item) => {
     setActiveItem(item);
@@ -54,6 +54,12 @@ const Navbar = ({ isCollapsed, toggleSidebar }) => {
             <Link to="/loans" title="Loans">
               <FiClipboard size={20} className="nav-icon" />
               {!isCollapsed && <span>Loans</span>}
+            </Link>
+          </li>
+          <li className={activeItem === 'categories' ? 'active' : ''} onClick={() => handleItemClick('categories')}>
+            <Link to="/categories" title="Categories">
+              <FiBox size={20} className="nav-icon" />
+              {!isCollapsed && <span>Categories</span>}
             </Link>
           </li>
         </ul>

@@ -7,6 +7,7 @@ import Home from './pages/Home/Home';
 import Profile from './pages/Profile/Profile';
 import Inventory from './pages/Inventory/Inventory';
 import Loans from './pages/Loans/Loans';
+import Categories from './pages/Categories/Categories';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import './App.css';
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/loans" element={<Loans />} />
+                    <Route path="/categories" element={<Categories />} />
                   </Routes>
                 </Layout>
               </ProtectedRoute>

@@ -5,7 +5,7 @@ import Yeti from './Yeti';
 import './LoginPage.css';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -33,9 +33,9 @@ const LoginPage = () => {
     }
   }, [user, navigate, from]);
 
-  const handleUsernameChange = (e) => {
+  const handleEmailChange = (e) => {
     const value = e.target.value;
-    setUsername(value);
+    setEmail(value);
     
     // Obtenemos el estilo del input para que la medición sea exacta
     const style = window.getComputedStyle(e.target);
@@ -47,20 +47,20 @@ const LoginPage = () => {
     setTextWidth(Math.min(width, maxWidth));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsError(false);
     setIsSuccess(false);
     
-    const success = login(username, password);
-    if (success) {
+    const result = await login(email, password);
+    if (result.success) {
       setIsSuccess(true);
       setTimeout(() => {
         navigate(from, { replace: true });
       }, 1000);
     } else {
       setIsError(true);
-      setErrorMsg('Invalid username or password');
+      setErrorMsg(result.message);
     }
   };
 
@@ -77,15 +77,15 @@ const LoginPage = () => {
           <h2>Iniciar sesión</h2>
           {errorMsg && <div className="error-message">{errorMsg}</div>}
           <div className="input-group">
-            <label htmlFor="username">Usuario</label>
+            <label htmlFor="email">Email</label>
             <input
               ref={inputRef}
-              type="text"
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
+              type="email"
+              id="email"
+              value={email}
+              onChange={handleEmailChange}
               required
-              autoComplete="username"
+              autoComplete="email"
             />
           </div>
           <div className="input-group">

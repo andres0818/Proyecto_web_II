@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import EvolvingYeti from './EvolvingYeti';
+import UserService from '../../services/userService';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
+    phone_number: '',
     password: '',
     confirmPassword: ''
   });
@@ -46,20 +49,34 @@ const RegisterPage = () => {
       setStrengthLevel(calculateStrength(value));
     }
 
-    if (name === 'name') {
+    if (name === 'first_name') {
       const style = window.getComputedStyle(e.target);
       const font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
       setUsernameWidth(Math.min(getTextWidth(value, font), 250));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Las contraseñas no coinciden');
       return;
     }
-    navigate('/login');
+    
+    try {
+      await UserService.create({
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phone_number,
+        user_role: 'STUDENT' // default role
+      });
+      navigate('/login');
+    } catch (err) {
+      console.error(err);
+      setError('Hubo un error al registrar. Verifica tus datos.');
+    }
   };
 
   return (
@@ -75,13 +92,23 @@ const RegisterPage = () => {
           {error && <div className="error-message">{error}</div>}
           
           <div className="input-group">
-            <label>Full Name</label>
-            <input name="name" type="text" onChange={handleChange} required />
+            <label>Nombre(s)</label>
+            <input name="first_name" type="text" onChange={handleChange} required />
+          </div>
+
+          <div className="input-group">
+            <label>Apellidos</label>
+            <input name="last_name" type="text" onChange={handleChange} required />
           </div>
 
           <div className="input-group">
             <label>Email</label>
             <input name="email" type="email" onChange={handleChange} required />
+          </div>
+
+          <div className="input-group">
+            <label>Teléfono</label>
+            <input name="phone_number" type="text" onChange={handleChange} />
           </div>
 
           <div className="input-group">
