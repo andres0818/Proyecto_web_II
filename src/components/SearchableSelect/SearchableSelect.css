@@ -1,0 +1,120 @@
+.searchable-select {
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+
+.searchable-select-hidden-input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  border: none;
+  pointer-events: none;
+}
+
+.searchable-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.searchable-select-header:hover {
+  border-color: #aaa;
+}
+
+.searchable-select-header.open {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.searchable-select-header .arrow {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.searchable-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.searchable-select-input {
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.searchable-select-input:focus {
+  border-color: #6366f1;
+}
+
+.searchable-select-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.searchable-select-item {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #444;
+  transition: background-color 0.15s ease;
+}
+
+.searchable-select-item:hover {
+  background-color: #f8f9fa;
+}
+
+.searchable-select-item.selected {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.searchable-select-item.no-results {
+  color: #888;
+  cursor: default;
+  font-style: italic;
+  text-align: center;
+}
+
+.searchable-select-item.no-results:hover {
+  background-color: transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

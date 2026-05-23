@@ -14,7 +14,8 @@ const Inventory = () => {
     name: '',
     description: '',
     categoryId: '',
-    quantity_available: 1
+    quantity_total: 1,
+    quantity_damaged: 0
   });
 
   const fetchData = async () => {
@@ -45,7 +46,8 @@ const Inventory = () => {
         name: article.name,
         description: article.description,
         categoryId: article.category?.categoryId || '',
-        quantity_available: article.quantity_available
+        quantity_total: article.quantity_total !== undefined ? article.quantity_total : article.quantity_available,
+        quantity_damaged: article.quantity_damaged || 0
       });
     } else {
       setIsEditing(false);
@@ -53,7 +55,8 @@ const Inventory = () => {
         name: '',
         description: '',
         categoryId: categories.length > 0 ? categories[0].categoryId : '',
-        quantity_available: 1
+        quantity_total: 1,
+        quantity_damaged: 0
       });
     }
     setShowModal(true);
@@ -70,7 +73,8 @@ const Inventory = () => {
         name: currentArticle.name,
         description: currentArticle.description,
         categoryId: parseInt(currentArticle.categoryId),
-        quantity_available: parseInt(currentArticle.quantity_available)
+        quantity_total: parseInt(currentArticle.quantity_total),
+        quantity_damaged: parseInt(currentArticle.quantity_damaged)
       };
 
       if (isEditing) {
@@ -117,9 +121,11 @@ const Inventory = () => {
                 <tr>
                   <th>ID</th>
                   <th>Nombre</th>
-                  <th>Descripción</th>
                   <th>Categoría</th>
-                  <th>Cantidad Disp.</th>
+                  <th>Total</th>
+                  <th>Disp.</th>
+                  <th>Prest.</th>
+                  <th>Dañ.</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -129,15 +135,25 @@ const Inventory = () => {
                     <tr key={item.itemId}>
                       <td>{item.itemId}</td>
                       <td className="fw-bold">{item.name}</td>
-                      <td>{item.description}</td>
                       <td>
                         <span className="category-badge">
                           {item.category?.categoryName || 'N/A'}
                         </span>
                       </td>
+                      <td>{item.quantity_total || item.quantity_available}</td>
                       <td>
                         <span className={`qty-badge ${item.quantity_available > 0 ? 'in-stock' : 'out-of-stock'}`}>
                           {item.quantity_available}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="qty-badge neutral">
+                          {Math.max(0, (item.quantity_total || item.quantity_available) - item.quantity_available - (item.quantity_damaged || 0))}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`qty-badge ${item.quantity_damaged > 0 ? 'out-of-stock' : 'in-stock'}`}>
+                          {item.quantity_damaged || 0}
                         </span>
                       </td>
                       <td className="actions-cell">
@@ -208,14 +224,24 @@ const Inventory = () => {
                     ))}
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>Cantidad Disponible</label>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label>Cantidad Total</label>
                   <input
                     type="number"
                     required
                     min="0"
-                    value={currentArticle.quantity_available}
-                    onChange={(e) => setCurrentArticle({ ...currentArticle, quantity_available: e.target.value })}
+                    value={currentArticle.quantity_total}
+                    onChange={(e) => setCurrentArticle({ ...currentArticle, quantity_total: e.target.value })}
+                  />
+                </div>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label>Dañados / Mantenimiento</label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    value={currentArticle.quantity_damaged}
+                    onChange={(e) => setCurrentArticle({ ...currentArticle, quantity_damaged: e.target.value })}
                   />
                 </div>
               </div>

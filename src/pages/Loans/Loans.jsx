@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import LoanService from '../../services/loanService';
+import UserService from '../../services/userService';
+import ArticleService from '../../services/articleService';
+import SearchableSelect from '../../components/SearchableSelect/SearchableSelect';
 import { FiEdit2, FiTrash2, FiPlus, FiX, FiCheckCircle } from 'react-icons/fi';
 import './Loans.css';
 
@@ -16,6 +19,8 @@ const Loans = () => {
     return_date: '',
     status: true
   });
+  const [usersList, setUsersList] = useState([]);
+  const [articlesList, setArticlesList] = useState([]);
 
   const fetchLoans = async () => {
     setLoading(true);
@@ -31,7 +36,21 @@ const Loans = () => {
 
   useEffect(() => {
     fetchLoans();
+    fetchUsersAndArticles();
   }, []);
+
+  const fetchUsersAndArticles = async () => {
+    try {
+      const [users, articles] = await Promise.all([
+        UserService.getAll(),
+        ArticleService.getAll()
+      ]);
+      setUsersList(users.map(u => ({ value: u.userId, label: `${u.first_name} ${u.last_name} (${u.email})` })));
+      setArticlesList(articles.map(a => ({ value: a.itemId || a.article_id, label: `${a.name} (ID: ${a.itemId || a.article_id})` })));
+    } catch (error) {
+      console.error('Error fetching users and articles', error);
+    }
+  };
 
   const handleOpenModal = (loan = null) => {
     if (loan) {
@@ -84,7 +103,7 @@ const Loans = () => {
       handleCloseModal();
     } catch (error) {
       console.error('Error saving loan', error);
-      alert('Hubo un error al guardar el préstamo.');
+      alert(error.response?.data || 'Hubo un error al guardar el préstamo.');
     }
   };
 
@@ -211,24 +230,24 @@ const Loans = () => {
             <h2>{isEditing ? 'Editar Préstamo' : 'Nuevo Préstamo'}</h2>
             <form onSubmit={handleSubmit} className="loan-form">
               <div className="form-row">
-                <div className="form-group">
-                  <label>ID Usuario</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="Ej. 1"
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label>Usuario</label>
+                  <SearchableSelect
+                    options={usersList}
                     value={currentLoan.userId}
-                    onChange={(e) => setCurrentLoan({ ...currentLoan, userId: e.target.value })}
+                    onChange={(val) => setCurrentLoan({ ...currentLoan, userId: val })}
+                    placeholder="Buscar usuario..."
+                    required
                   />
                 </div>
-                <div className="form-group">
-                  <label>ID Artículo</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="Ej. 10"
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label>Artículo</label>
+                  <SearchableSelect
+                    options={articlesList}
                     value={currentLoan.itemId}
-                    onChange={(e) => setCurrentLoan({ ...currentLoan, itemId: e.target.value })}
+                    onChange={(val) => setCurrentLoan({ ...currentLoan, itemId: val })}
+                    placeholder="Buscar artículo..."
+                    required
                   />
                 </div>
               </div>
