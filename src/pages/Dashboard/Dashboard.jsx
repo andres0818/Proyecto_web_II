@@ -27,6 +27,8 @@ const Dashboard = () => {
           AnalyticsService.getTopArticles()
         ]);
         
+        console.log("Analytics Data Loaded:", { kpiData, catData, historyData, topData });
+        
         setKpis(kpiData);
         setCategoryData(catData);
         setLoanHistory(historyData);
@@ -86,16 +88,14 @@ const Dashboard = () => {
         {/* Top Articles Chart */}
         <div className="chart-card">
           <h2>Top Artículos Más Prestados</h2>
-          <div className="chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topArticles} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="loan_count" name="Préstamos" fill="#4F46E5" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="chart-wrapper" style={{ height: '300px' }}>
+            <BarChart width={500} height={300} data={topArticles} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="loan_count" name="Préstamos" fill="#4F46E5" radius={[4, 4, 0, 0]} />
+            </BarChart>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2>Distribución por Categoría</h2>
           <div className="chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="99%" height={300}>
               <PieChart>
                 <Pie
                   data={categoryData}
@@ -131,7 +131,7 @@ const Dashboard = () => {
         <div className="chart-card full-width">
           <h2>Historial de Préstamos (Últimos 6 Meses)</h2>
           <div className="chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="99%" height={300}>
               <LineChart data={loanHistory} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="month" />
