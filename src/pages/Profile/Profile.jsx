@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import UserService from "../../services/userService";
+import { FiUser, FiLock, FiSave, FiShield, FiMail, FiPhone } from 'react-icons/fi';
 import "./Profile.css";
 
 const Profile = () => {
-
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -40,11 +40,8 @@ const Profile = () => {
 
   const handleUpdateInfo = async (e) => {
     e.preventDefault();
+    setMsg("");
     try {
-      // Create user DTO matching backend expectation
-      // Note: Backend might require password when updating, so we might need a separate endpoint for password change
-      // For now, we update basic info sending the existing role and a dummy password if it's required by the DTO,
-      // or hopefully the backend allows partial updates. Let's assume it requires full DTO.
       await UserService.update(user.userId, {
         first_name: formData.first_name,
         last_name: formData.last_name,
@@ -52,7 +49,7 @@ const Profile = () => {
         phone_number: formData.phone_number,
         user_role: user.user_role
       });
-      setMsg("Información actualizada correctamente. (Inicia sesión de nuevo para ver los cambios globales si es necesario)");
+      setMsg("Información actualizada correctamente.");
     } catch (err) {
       console.error(err);
       setMsg("Error al actualizar la información.");
@@ -64,7 +61,7 @@ const Profile = () => {
     setPassMsg("");
     
     if (formData.password_new !== formData.password_confirmar) {
-      setPassMsg("Las nuevas contraseñas no coinciden.");
+      setPassMsg("Error: Las nuevas contraseñas no coinciden.");
       return;
     }
     
@@ -78,7 +75,6 @@ const Profile = () => {
       await UserService.changePassword(user.userId, payload);
       setPassMsg("¡Contraseña actualizada con éxito!");
       
-      // Limpiar los campos de contraseña
       setFormData(prev => ({
         ...prev,
         password_actual: "",
@@ -92,102 +88,170 @@ const Profile = () => {
   };
 
   return (
-    <>
-      {msg && <div style={{ marginBottom: "1rem", color: "blue" }}>{msg}</div>}
-      <form onSubmit={handleUpdateInfo}>
-        <fieldset>
-          <legend>Información personal</legend>
+    <div className="profile-container">
+      <div className="profile-header">
+        <h1>Mi Perfil</h1>
+        <p>Administra tu información personal y configuración de seguridad.</p>
+      </div>
 
-          <label>
-            Nombre(s):
-            <input
-              type="text"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-            />
-          </label>
+      <div className="profile-content">
+        {/* Tarjeta de Información Personal */}
+        <div className="profile-card">
+          <div className="card-header">
+            <div className="icon-wrapper">
+              <FiUser />
+            </div>
+            <h2>Información Personal</h2>
+          </div>
+          
+          {msg && (
+            <div className={`alert ${msg.includes("Error") ? "alert-error" : "alert-success"}`}>
+              {msg}
+            </div>
+          )}
+          
+          <form onSubmit={handleUpdateInfo} className="modern-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Nombre(s)</label>
+                <div className="input-with-icon">
+                  <FiUser className="input-icon" />
+                  <input
+                    type="text"
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej. Jean"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Apellidos</label>
+                <div className="input-with-icon">
+                  <FiUser className="input-icon" />
+                  <input
+                    type="text"
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej. Doe"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="form-row">
+              <div className="form-group">
+                <label>Teléfono</label>
+                <div className="input-with-icon">
+                  <FiPhone className="input-icon" />
+                  <input
+                    type="text"
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej. +57 300 000 0000"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Correo Electrónico</label>
+                <div className="input-with-icon">
+                  <FiMail className="input-icon" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="ejemplo@correo.com"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <label>
-            Apellidos:
-            <input
-              type="text"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-            />
-          </label>
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">
+                <FiSave /> Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </div>
 
-          <label>
-            Teléfono:
-            <input
-              type="text"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-            />
-          </label>
+        {/* Tarjeta de Seguridad */}
+        <div className="profile-card">
+          <div className="card-header">
+            <div className="icon-wrapper">
+              <FiShield />
+            </div>
+            <h2>Seguridad de la Cuenta</h2>
+          </div>
+          
+          {passMsg && (
+            <div className={`alert ${passMsg.includes("Error") || passMsg.includes("no coinciden") ? "alert-error" : "alert-success"}`}>
+              {passMsg}
+            </div>
+          )}
+          
+          <form onSubmit={handlePasswordChange} className="modern-form">
+            <div className="form-group">
+              <label>Contraseña Actual</label>
+              <div className="input-with-icon">
+                <FiLock className="input-icon" />
+                <input
+                  type="password"
+                  name="password_actual"
+                  value={formData.password_actual}
+                  onChange={handleChange}
+                  required
+                  placeholder="Ingresa tu contraseña actual"
+                />
+              </div>
+            </div>
+            
+            <div className="form-row">
+              <div className="form-group">
+                <label>Nueva Contraseña</label>
+                <div className="input-with-icon">
+                  <FiLock className="input-icon" />
+                  <input
+                    type="password"
+                    name="password_new"
+                    value={formData.password_new}
+                    onChange={handleChange}
+                    required
+                    placeholder="Mínimo 6 caracteres"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Confirmar Contraseña</label>
+                <div className="input-with-icon">
+                  <FiLock className="input-icon" />
+                  <input
+                    type="password"
+                    name="password_confirmar"
+                    value={formData.password_confirmar}
+                    onChange={handleChange}
+                    required
+                    placeholder="Repite la nueva contraseña"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <label>
-            Correo Electronico:
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </label>
-        </fieldset>
-        <button type="submit" style={{ marginTop: "1rem" }}>Actualizar Información</button>
-      </form>
-
-      <h3>¿Cambiar contraseña?</h3>
-      {passMsg && <div style={{ marginBottom: "1rem", color: passMsg.includes("Error") || passMsg.includes("no coinciden") ? "red" : "green" }}>{passMsg}</div>}
-
-      <form onSubmit={handlePasswordChange}>
-        <fieldset>
-
-          <label htmlFor="password_actual">
-            Contraseña Actual
-            <input
-              type="password"
-              name="password_actual"
-              id="password_actual"
-              value={formData.password_actual}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label htmlFor="password_new">
-            Nueva contraseña
-            <input
-              type="password"
-              name="password_new"
-              id="password_new"
-              value={formData.password_new}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label htmlFor="password_confirmar">
-            Confirmar nueva contraseña
-            <input
-              type="password"
-              name="password_confirmar"
-              id="password_confirmar"
-              value={formData.password_confirmar}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-        </fieldset>
-
-        <button type="submit" style={{ marginTop: "1rem" }}>Cambiar Contraseña</button>
-      </form>
-    </>
+            <div className="form-actions">
+              <button type="submit" className="btn-secondary">
+                <FiSave /> Actualizar Contraseña
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 

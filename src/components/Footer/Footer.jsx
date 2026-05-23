@@ -3,13 +3,13 @@ import './Footer.css';
 
 const Footer = () => {
   return (
-    <footer>
-        <p>&copy; 2025 EduLend. Todos los derechos reservados.</p>
-        <p>
-            <a href="#">Términos</a> |
-            <a href="#">Privacidad</a> |
+    <footer className="footer-container">
+        <p>&copy; {new Date().getFullYear()} EduLend. Todos los derechos reservados.</p>
+        <div className="footer-links">
+            <a href="#">Términos de Servicio</a>
+            <a href="#">Política de Privacidad</a>
             <a href="#">Contacto</a>
-        </p>
+        </div>
     </footer>
   );
 };
